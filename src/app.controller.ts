@@ -1,12 +1,12 @@
 import express from "express";
 import path from "node:path"
 import type {  Express ,   Request,  Response} from "express";
-;
+
 import dotenv from "dotenv";
 import cors from "cors";
 import rateLimit,{type RateLimitRequestHandler} from "express-rate-limit";
 import helmet from "helmet";
-dotenv.config ({path:path.resolve("config/.env.dev")})
+dotenv.config ({path:path.resolve("../config/.env.dev")});
 import authRouter from "./modules/auth/auth.controller";
 import { globalhandler } from "./utils/response/error.response";
 
