@@ -2,7 +2,6 @@ import type { NextFunction, Request, Response } from "express";
 
 
 
-
 export interface IError extends Error {
     statuscode?: number
 
@@ -17,6 +16,11 @@ export class ApplicationException extends Error {
 export class badRequestException extends ApplicationException {
     constructor(message: string, options?: ErrorOptions) {
         super(message, 400, options);
+    }
+}
+export class conflictException extends ApplicationException {
+    constructor(message: string, options?: ErrorOptions) {
+        super(message, 409, options);
     }
 }
 export class NotFoundException extends ApplicationException {

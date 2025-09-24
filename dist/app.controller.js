@@ -10,7 +10,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const helmet_1 = __importDefault(require("helmet"));
-dotenv_1.default.config({ path: node_path_1.default.resolve("../config/.env.dev") });
+dotenv_1.default.config({ path: node_path_1.default.resolve("config/.env.dev") });
 const auth_controller_1 = __importDefault(require("./modules/auth/auth.controller"));
 const error_response_1 = require("./utils/response/error.response");
 const connection_1 = __importDefault(require("./Db/connection"));

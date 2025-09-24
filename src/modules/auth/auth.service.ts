@@ -1,22 +1,28 @@
 import type { NextFunction, Request, Response } from "express";
 import {  NotFoundException } from "../../utils/response/error.response";
 import { ISignupDTO } from "./auth.dto";
-import { IUser, Usermodel } from "../../Db/models/user.model";
-import { Model } from "mongoose";
+import {Usermodel} from "../../Db/models/user.model";
+import {UserRepository } from "../../Db/repositories/user.repositories";
 //import { ISignupDTO } from "./auth.dto";
-
+import { conflictException } from "../../utils/response/error.response";
 //import { json } from "zod";
-
+import { generatehash } from "../../utils/security/hash";
+import { sendEmail } from "../../utils/email/send.email";
 class authenticationservice{
-    private _usermodel: Model<IUser> = Usermodel;
-    constructor(){
-        
-    }
+    private _usermodel= new UserRepository(Usermodel);
+    constructor(){}
     signup=async(req:Request,res:Response)
     :Promise<Response>=>{
     const {username,email,password}:ISignupDTO=req.body;
-    const [user]:IUser[] = await this._usermodel.create([{username,email,password}],{validateBeforeSave: true});
+    const checkuser =await this._usermodel.findOne({filter:{email},options:{lean:true}});
+   
     
+    
+    if (checkuser) throw new conflictException("user already exist");
+
+    const user=(await this._usermodel.createuser({data:[{username,email,password:await generatehash(password)}],options:{validateBeforeSave:true},}));
+    await sendEmail({to:email,html:"khaled waleed "})
+   
     return res.status(201).json({message:"User created successfully",user});
     }
     login=(req:Request,res:Response,next:NextFunction):Response=>{

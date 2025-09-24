@@ -9,6 +9,9 @@ export declare class ApplicationException extends Error {
 export declare class badRequestException extends ApplicationException {
     constructor(message: string, options?: ErrorOptions);
 }
+export declare class conflictException extends ApplicationException {
+    constructor(message: string, options?: ErrorOptions);
+}
 export declare class NotFoundException extends ApplicationException {
     constructor(message: string, options?: ErrorOptions);
 }
