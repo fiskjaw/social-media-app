@@ -15,7 +15,7 @@ class authenticationservice{
     signup=async(req:Request,res:Response)
     :Promise<Response>=>{
     const {username,email,password}:ISignupDTO=req.body;
-    const [user]:IUser[] = await this._usermodel.create([{username,email,password}]);
+    const [user]:IUser[] = await this._usermodel.create([{username,email,password}],{validateBeforeSave: true});
     
     return res.status(201).json({message:"User created successfully",user});
     }
