@@ -9,8 +9,9 @@ export declare enum RoleEnum {
 }
 export interface IUser {
     _id: Types.ObjectId;
-    firstname: string;
-    lastname: string;
+    firstname?: string;
+    lastname?: string;
+    username: string;
     email: string;
     password: string;
     createdAt: Date;

@@ -13,8 +13,9 @@ export enum RoleEnum{
 
 export interface IUser{
 _id:Types.ObjectId;
-firstname:string;
-lastname:string;
+firstname?:string;
+lastname?:string;
+username:string;
 email:string;
 password:string;
 createdAt:Date;
@@ -34,8 +35,7 @@ changecredentialstime?:string;
 
 }
 export const userschema= new Schema<IUser>({
-firstname:{type:String,required:true,maxlength:100,minlength:2},
-lastname:{type:String,required:true,maxlength:100,minlength:2},
+username:{type:String,required:true,maxlength:100,minlength:2},
 email:{type:String,required:true,unique:true},
 password:{type:String,required:true},confirmemailotp:{type:String},
 createdAt:{type:Date,default:Date.now()},
@@ -50,10 +50,14 @@ role:{type:String,enum:Object.values(RoleEnum),default:RoleEnum.USER},
 },
     {timestamps:true,toJSON:{virtuals:true},toObject:{virtuals:true}});
 
-    userschema.virtual("fullname").set(function(value:string){
-        const [firstname,lastname]=value.split(" ")||[];
-        this.set({firstname,lastname});
-    }).get(function(){
-        return `${this.firstname} ${this.lastname}`;
-    })
+ userschema.virtual("fullname")
+  .set(function(value: string) {
+    if (!value) return; // don’t set anything if value is undefined
+    const [firstname, ...rest] = value.trim().split(" ");
+    const lastname = rest.join(" ");
+    this.set({ firstname, lastname });
+  })
+  .get(function() {
+    return `${this.firstname ?? ""} ${this.lastname ?? ""}`.trim();
+  });
     export const Usermodel =models.USER||model<IUser>("USER",userschema);

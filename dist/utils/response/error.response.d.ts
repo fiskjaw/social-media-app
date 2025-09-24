@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 export interface IError extends Error {
-    statuscode: number;
+    statuscode?: number;
 }
 export declare class ApplicationException extends Error {
     statuscode: number;
@@ -12,5 +12,5 @@ export declare class badRequestException extends ApplicationException {
 export declare class NotFoundException extends ApplicationException {
     constructor(message: string, options?: ErrorOptions);
 }
-export declare const globalhandler: (err: IError, req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>>;
+export declare const globalhandler: (err: IError, req: Request, res: Response, next: NextFunction) => void;
 //# sourceMappingURL=error.response.d.ts.map

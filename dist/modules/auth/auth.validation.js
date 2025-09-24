@@ -11,7 +11,9 @@ exports.signupschema = {
         username: validation_middleware_1.generalfields.username,
         email: validation_middleware_1.generalfields.email,
         password: validation_middleware_1.generalfields.password,
-        confirmpassword: validation_middleware_1.generalfields.confirmpassword
+        confirmpassword: validation_middleware_1.generalfields.confirmpassword,
+        firstname: validation_middleware_1.generalfields.username,
+        lastname: validation_middleware_1.generalfields.username
     }).superRefine((data, ctx) => {
         if (data.password !== data.confirmpassword) {
             ctx.addIssue({

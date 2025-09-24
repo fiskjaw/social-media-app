@@ -6,7 +6,9 @@ export const signupschema={
        username:generalfields.username,
        email:generalfields.email,
        password:generalfields.password,
-       confirmpassword:generalfields.confirmpassword
+       confirmpassword:generalfields.confirmpassword,
+       firstname:generalfields.username,
+       lastname:generalfields.username
     }).superRefine((data,ctx) =>{
         if (data.password!==data.confirmpassword){
              ctx.addIssue({

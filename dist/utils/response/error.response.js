@@ -24,7 +24,13 @@ class NotFoundException extends ApplicationException {
 }
 exports.NotFoundException = NotFoundException;
 const globalhandler = (err, req, res, next) => {
-    return res.status(err.statuscode).json({ message: err.message || "Something went wrong", stack: process.env.mode === "dev" ? err.stack : undefined, cause: err.cause });
+    const status = err.statuscode && Number.isInteger(err.statuscode)
+        ? err.statuscode
+        : 500;
+    res.status(status).json({
+        success: false,
+        message: err.message || "Something went wrong", stack: process.env.mode === "dev" ? err.stack : undefined, cause: err.cause
+    });
 };
 exports.globalhandler = globalhandler;
 //# sourceMappingURL=error.response.js.map
