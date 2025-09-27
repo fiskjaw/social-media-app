@@ -9,6 +9,7 @@ export declare const generalfields: {
     email: z.ZodEmail;
     password: z.ZodString;
     confirmpassword: z.ZodString;
+    otp: z.ZodString;
 };
 export {};
 //# sourceMappingURL=validation.middleware.d.ts.map

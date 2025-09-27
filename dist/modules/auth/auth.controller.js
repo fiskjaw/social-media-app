@@ -9,6 +9,7 @@ const validation_middleware_1 = require("../../middlewares/validation.middleware
 const auth_validation_1 = require("./auth.validation");
 const router = (0, express_1.Router)();
 router.post("/signup", (0, validation_middleware_1.validation)(auth_validation_1.signupschema), auth_service_1.default.signup);
-router.get("/login", auth_service_1.default.login);
+router.patch("/confirmemail", (0, validation_middleware_1.validation)(auth_validation_1.confirmemailschema), auth_service_1.default.confirmemail);
+router.get("/login", (0, validation_middleware_1.validation)(auth_validation_1.loginschema), auth_service_1.default.login);
 exports.default = router;
 //# sourceMappingURL=auth.controller.js.map

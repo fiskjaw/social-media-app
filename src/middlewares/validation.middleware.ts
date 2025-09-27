@@ -44,4 +44,5 @@ export  const generalfields ={
     email:z.email(),
     password:z.string().min(6).max(100),
     confirmpassword:z.string().min(6).max(100),
+    otp:z.string().regex(/^\d{6}$/),
 } 

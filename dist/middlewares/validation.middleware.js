@@ -36,5 +36,6 @@ exports.generalfields = {
     email: zod_1.default.email(),
     password: zod_1.default.string().min(6).max(100),
     confirmpassword: zod_1.default.string().min(6).max(100),
+    otp: zod_1.default.string().regex(/^\d{6}$/),
 };
 //# sourceMappingURL=validation.middleware.js.map

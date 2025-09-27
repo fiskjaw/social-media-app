@@ -1,11 +1,18 @@
 import z from "zod";
 import { generalfields } from "../../middlewares/validation.middleware";
 
-export const signupschema={
+export const loginschema={
     body:z.strictObject({
-       username:generalfields.username,
+    
        email:generalfields.email,
        password:generalfields.password,
+      
+    })
+}
+export const signupschema={
+    body:loginschema.body
+    .extend({
+       username:generalfields.username,
        confirmpassword:generalfields.confirmpassword,
        firstname:generalfields.username,
        lastname:generalfields.username
@@ -17,12 +24,15 @@ export const signupschema={
          message:"password mismatch"
         })
              }
-if (data.username.split(" ").length !=2){
-    ctx.addIssue({
-        code:"custom",
-        path:["username"],
-        message:"username must be two words"
+
     })
 }
+
+export const confirmemailschema={
+    body:z.strictObject({
+    
+       email:generalfields.email,
+       password:generalfields.password,
+      
     })
 }

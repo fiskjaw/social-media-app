@@ -25,6 +25,7 @@ resetpasswordotp?:string;
 changecredentialstime?:string;
  phone?:string;
  address?:string;
+ confirmedAt?:Date;
 
  gender:GenderEnum;
  role:RoleEnum;

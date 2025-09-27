@@ -1,6 +1,7 @@
-import { CreateOptions, HydratedDocument, Model, RootFilterQuery } from "mongoose";
+import { CreateOptions, HydratedDocument, Model, MongooseUpdateQueryOptions, RootFilterQuery, UpdateQuery, UpdateWriteOpResult } from "mongoose";
 import { ProjectionType, QueryOptions } from "mongoose";
 import { PopulateOptions } from "mongoose";
+
 
 
 
@@ -21,7 +22,17 @@ async findOne({filter,select,options,}:{filter?:RootFilterQuery<Tdocument>;selec
     }
     return await doc.exec();
 }
-
+async updateOne({
+    filter,
+    update,
+    options,
+}: {
+    filter: RootFilterQuery<Tdocument>;
+    update: UpdateQuery<Tdocument>;
+    options?: MongooseUpdateQueryOptions<Tdocument> | null;
+}): Promise<UpdateWriteOpResult> {
+    return await this.model.updateOne(filter, {...update,$inc:{_v:1}}, options);
+}
 
 
 }

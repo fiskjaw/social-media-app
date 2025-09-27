@@ -1,4 +1,4 @@
-import { CreateOptions, HydratedDocument, Model, RootFilterQuery } from "mongoose";
+import { CreateOptions, HydratedDocument, Model, MongooseUpdateQueryOptions, RootFilterQuery, UpdateQuery, UpdateWriteOpResult } from "mongoose";
 import { ProjectionType, QueryOptions } from "mongoose";
 export declare abstract class DatabaseRepository<Tdocument> {
     protected readonly model: Model<Tdocument>;
@@ -12,5 +12,10 @@ export declare abstract class DatabaseRepository<Tdocument> {
         select?: ProjectionType<Tdocument> | null;
         options?: QueryOptions<Tdocument> | null;
     }): Promise<any | HydratedDocument<Tdocument> | null>;
+    updateOne({ filter, update, options, }: {
+        filter: RootFilterQuery<Tdocument>;
+        update: UpdateQuery<Tdocument>;
+        options?: MongooseUpdateQueryOptions<Tdocument> | null;
+    }): Promise<UpdateWriteOpResult>;
 }
 //# sourceMappingURL=database.repositories.d.ts.map
