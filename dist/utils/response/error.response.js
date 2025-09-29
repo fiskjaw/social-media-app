@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.globalhandler = exports.NotFoundException = exports.conflictException = exports.badRequestException = exports.ApplicationException = void 0;
+exports.globalhandler = exports.ForbiddenException = exports.UnAuthorizedException = exports.NotFoundException = exports.conflictException = exports.badRequestException = exports.ApplicationException = void 0;
 class ApplicationException extends Error {
     statuscode;
     constructor(message, statuscode, options) {
@@ -29,6 +29,18 @@ class NotFoundException extends ApplicationException {
     }
 }
 exports.NotFoundException = NotFoundException;
+class UnAuthorizedException extends ApplicationException {
+    constructor(message, options) {
+        super(message, 401, options);
+    }
+}
+exports.UnAuthorizedException = UnAuthorizedException;
+class ForbiddenException extends ApplicationException {
+    constructor(message, options) {
+        super(message, 403, options);
+    }
+}
+exports.ForbiddenException = ForbiddenException;
 const globalhandler = (err, req, res, next) => {
     const status = err.statuscode && Number.isInteger(err.statuscode)
         ? err.statuscode

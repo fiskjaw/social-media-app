@@ -17,4 +17,5 @@ const info = await transporter.sendMail({
     ...data,
     from: `"khaled waleed" <${process.env.email}>`,
 })
+console.log("Message sent: %s", info.messageId);
 }

@@ -7,8 +7,9 @@ import { generateotp } from "../../utils/generateotp";
 import { emailevent } from "../../utils/event/email.event";
 import { conflictException } from "../../utils/response/error.response";
 import { badRequestException } from "../../utils/response/error.response";
-import { generatetoken } from "../../utils/security/token";
+
 import { comparehash, generatehash } from "../../utils/security/hash";
+import { createlogincredentials } from "../../utils/security/token";
 
 
 class authenticationservice{
@@ -25,7 +26,7 @@ const otp =generateotp();
     const user=(await this._usermodel.createuser({data:[{username,email,password:await generatehash(password),confirmemailotp:await generatehash(otp.toString())}],options:{validateBeforeSave:true},}));
     emailevent.emit("confirmemail",{to:email,username,otp});
    
-    return res.status(201).json({message:"User created successfully",user});
+    return res.status(201).json({message:"User created successfully",user,decoded:user});
     }
  login=async(req:Request,res:Response,next:NextFunction):Promise<Response>=>{
       const {email,password}=req.body;
@@ -33,8 +34,8 @@ const otp =generateotp();
       if (!user) throw new NotFoundException("User not found");
       if(!comparehash(password,user.password)) throw new badRequestException("Invalid password");
     
-      const accesstoken = await generatetoken({payload:{id:user._id}})
-      return res.status(200).json({message:"Login successful",accesstoken});
+     const logincredential= await createlogincredentials(user)
+      return res.status(200).json({message:"Login successful",refresh_token:logincredential.refreshtoken,accesstoken:logincredential.accesstoken});
     }
 confirmemail = async (req: Request, res: Response): Promise<Response> => {
   const { email, otp } = req.body;
@@ -64,7 +65,7 @@ confirmemail = async (req: Request, res: Response): Promise<Response> => {
 
   return res.status(200).json({
     message: "Email confirmed successfully",
-    user,
+    user,decoded:user
   });
 };
 

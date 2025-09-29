@@ -18,7 +18,7 @@ export declare const signupschema: {
 export declare const confirmemailschema: {
     body: z.ZodObject<{
         email: z.ZodEmail;
-        password: z.ZodString;
+        otp: z.ZodString;
     }, z.core.$strict>;
 };
 //# sourceMappingURL=auth.validation.d.ts.map

@@ -15,5 +15,11 @@ export declare class conflictException extends ApplicationException {
 export declare class NotFoundException extends ApplicationException {
     constructor(message: string, options?: ErrorOptions);
 }
+export declare class UnAuthorizedException extends ApplicationException {
+    constructor(message: string, options?: ErrorOptions);
+}
+export declare class ForbiddenException extends ApplicationException {
+    constructor(message: string, options?: ErrorOptions);
+}
 export declare const globalhandler: (err: IError, req: Request, res: Response, next: NextFunction) => void;
 //# sourceMappingURL=error.response.d.ts.map

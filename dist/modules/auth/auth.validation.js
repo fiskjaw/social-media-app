@@ -32,7 +32,7 @@ exports.signupschema = {
 exports.confirmemailschema = {
     body: zod_1.default.strictObject({
         email: validation_middleware_1.generalfields.email,
-        password: validation_middleware_1.generalfields.password,
+        otp: validation_middleware_1.generalfields.otp,
     })
 };
 //# sourceMappingURL=auth.validation.js.map

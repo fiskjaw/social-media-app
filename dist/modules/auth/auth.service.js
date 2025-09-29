@@ -7,8 +7,8 @@ const generateotp_1 = require("../../utils/generateotp");
 const email_event_1 = require("../../utils/event/email.event");
 const error_response_2 = require("../../utils/response/error.response");
 const error_response_3 = require("../../utils/response/error.response");
-const token_1 = require("../../utils/security/token");
 const hash_1 = require("../../utils/security/hash");
+const token_1 = require("../../utils/security/token");
 class authenticationservice {
     _usermodel = new user_repositories_1.UserRepository(user_model_1.Usermodel);
     constructor() { }
@@ -20,7 +20,7 @@ class authenticationservice {
         const otp = (0, generateotp_1.generateotp)();
         const user = (await this._usermodel.createuser({ data: [{ username, email, password: await (0, hash_1.generatehash)(password), confirmemailotp: await (0, hash_1.generatehash)(otp.toString()) }], options: { validateBeforeSave: true }, }));
         email_event_1.emailevent.emit("confirmemail", { to: email, username, otp });
-        return res.status(201).json({ message: "User created successfully", user });
+        return res.status(201).json({ message: "User created successfully", user, decoded: user });
     };
     login = async (req, res, next) => {
         const { email, password } = req.body;
@@ -29,8 +29,8 @@ class authenticationservice {
             throw new error_response_1.NotFoundException("User not found");
         if (!(0, hash_1.comparehash)(password, user.password))
             throw new error_response_3.badRequestException("Invalid password");
-        const accesstoken = await (0, token_1.generatetoken)({ payload: { id: user._id } });
-        return res.status(200).json({ message: "Login successful", accesstoken });
+        const logincredential = await (0, token_1.createlogincredentials)(user);
+        return res.status(200).json({ message: "Login successful", refresh_token: logincredential.refreshtoken, accesstoken: logincredential.accesstoken });
     };
     confirmemail = async (req, res) => {
         const { email, otp } = req.body;
@@ -55,7 +55,7 @@ class authenticationservice {
         });
         return res.status(200).json({
             message: "Email confirmed successfully",
-            user,
+            user, decoded: user
         });
     };
 }

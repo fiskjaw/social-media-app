@@ -32,7 +32,7 @@ export const confirmemailschema={
     body:z.strictObject({
     
        email:generalfields.email,
-       password:generalfields.password,
+      otp:generalfields.otp,
       
     })
 }

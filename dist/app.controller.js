@@ -13,6 +13,7 @@ const helmet_1 = __importDefault(require("helmet"));
 dotenv_1.default.config({ path: node_path_1.default.resolve("config/.env.dev") });
 const auth_controller_1 = __importDefault(require("./modules/auth/auth.controller"));
 const error_response_1 = require("./utils/response/error.response");
+const users_controller_1 = __importDefault(require("./modules/users/users.controller"));
 const connection_1 = __importDefault(require("./Db/connection"));
 const limiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,
@@ -31,10 +32,11 @@ const bootstrap = async () => {
     app.use(limiter);
     await (0, connection_1.default)();
     app.use("/api/auth", auth_controller_1.default);
+    app.use("/api/user", users_controller_1.default);
     app.get("/", (req, res) => {
         return res.status(200).json({ message: "hello social media app" });
     });
-    app.get("/users", (req, res) => {
+    app.get("/user", (req, res) => {
         return res.status(200).json({ message: "hello ts express" });
     });
     app.use(error_response_1.globalhandler);

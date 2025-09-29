@@ -15,6 +15,7 @@ const sendEmail = async (data) => {
         ...data,
         from: `"khaled waleed" <${process.env.email}>`,
     });
+    console.log("Message sent: %s", info.messageId);
 };
 exports.sendEmail = sendEmail;
 //# sourceMappingURL=send.email.js.map

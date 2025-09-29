@@ -9,7 +9,7 @@ import helmet from "helmet";
 dotenv.config ({path:path.resolve("config/.env.dev")});
 import authRouter from "./modules/auth/auth.controller";
 import { globalhandler } from "./utils/response/error.response";
-
+import userRouter from "./modules/users/users.controller";
 import connectDB from "./Db/connection";
 
 
@@ -32,11 +32,12 @@ export const bootstrap =async ():Promise<void> =>{
     app.use(limiter);
    await connectDB();
     app.use("/api/auth",authRouter);
+    app.use("/api/user",userRouter);
 
     app.get("/",(req:Request,res:Response)=>{
        return res.status(200).json({message:"hello social media app"});
     })
-    app.get("/users",(req:Request,res:Response)=>{
+    app.get("/user",(req:Request,res:Response)=>{
        return res.status(200).json({message:"hello ts express"});
     })
     app.use(globalhandler);

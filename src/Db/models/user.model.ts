@@ -1,4 +1,5 @@
 import { model, models, Schema,Types } from "mongoose";
+import { HydratedDocument } from "mongoose";
 
 export enum GenderEnum{ 
     MALE="male",
@@ -62,3 +63,4 @@ role:{type:String,enum:Object.values(RoleEnum),default:RoleEnum.USER},
     return `${this.firstname ?? ""} ${this.lastname ?? ""}`.trim();
   });
     export const Usermodel =models.USER||model<IUser>("USER",userschema);
+    export type HUSER=HydratedDocument<IUser>;
