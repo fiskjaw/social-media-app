@@ -8,6 +8,10 @@ export declare enum TokenEnum {
     ACCESS = "ACCESS",
     REFRESH = "REFRESH"
 }
+export declare enum logoutEnum {
+    only = "Only",
+    all = "All"
+}
 export declare const generatetoken: ({ payload, Secret, options, }: {
     payload: object;
     Secret?: Secret;
@@ -33,4 +37,5 @@ export declare const decodedtoken: ({ authorization, tokentype, }: {
     user: any;
     decoded: JwtPayload;
 }>;
+export declare const createrevoketoken: (decoded: JwtPayload) => Promise<void>;
 //# sourceMappingURL=token.d.ts.map

@@ -5,6 +5,9 @@ import { UserRepository } from "../../Db/repositories/user.repositories";
 import { verify } from "jsonwebtoken";
 import { Usermodel } from "../../Db/models/user.model";
 import { NotFoundException } from "../response/error.response";
+import {v4 as uuid} from "uuid";
+import { TokenRepository } from "../../Db/repositories/token.repositories";
+import { Tokenmodel } from "../../Db/models/token.model";
 
 export enum signaturelevelenum{
     USER="USER",
@@ -15,6 +18,10 @@ export enum TokenEnum{
         REFRESH="REFRESH"
 }
 
+export enum logoutEnum{
+        only="Only",
+        all="All"
+}
 export const generatetoken = async({
     payload,
     Secret=process.env.ACCESS_USER_SIGNATURE as string,
@@ -67,8 +74,9 @@ Promise<JwtPayload>=>{
 
         const signaturelevel=await getsignature(user.role);
         const signatures=await getsignatures(signaturelevel);
-        const accesstoken=await generatetoken({payload:{_di:user._id},Secret:signatures.access_signature,options:{expiresIn:Number(process.env.ACCESS_EXPIRY_IN)}})
-        const refreshtoken=await generatetoken({payload:{_id:user._id},Secret:signatures.refresh_signature,options:{expiresIn:Number(process.env.REFRESH_EXPIRY_IN)}})
+        const jwtid=uuid();
+        const accesstoken=await generatetoken({payload:{_id:user._id},Secret:signatures.access_signature,options:{expiresIn:Number(process.env.ACCESS_EXPIRY_IN),jwtid}})
+        const refreshtoken=await generatetoken({payload:{_id:user._id},Secret:signatures.refresh_signature,options:{expiresIn:Number(process.env.REFRESH_EXPIRY_IN),jwtid}})
         return {accesstoken,refreshtoken}
     }
 
@@ -80,7 +88,7 @@ export const decodedtoken = async ({
   tokentype?: TokenEnum;
 }) => {
   const usermodel = new UserRepository(Usermodel);
-
+  const tokenmodel = new TokenRepository(Tokenmodel);
   // Split the header into role and token
   const [role, token] = authorization.split(" ");
   if (!role || !token) {
@@ -103,18 +111,33 @@ export const decodedtoken = async ({
 
   const decoded = await verifytoken({ token, Secret: secret });
 
+  console.log(decoded);
   if (!decoded._id || !decoded.iat) {
     throw new UnAuthorizedException("Invalid token payload");
   }
-
+  
+  if (await tokenmodel.findOne({filter:{jti:decoded.jti}})) throw new UnAuthorizedException("invalid token");
   const user = await usermodel.findOne({
     filter: { _id: decoded._id },
-    options: { lean: true },
+   
   });
 
   if (!user) throw new NotFoundException("User not found with this token");
 
+  if (user.changecredentialstime?.getTime()||0>decoded.iat*1000)
+  throw new UnAuthorizedException("token expired");
+    
+  
   return { user, decoded };
+
+  
 };
   
-    
+    export const createrevoketoken=async(decoded:JwtPayload)=>{
+const tokenmodel = new TokenRepository(Tokenmodel);
+const [results]=await tokenmodel.create({data:[{jti:decoded.jti as string,expiresin:(decoded.iat as number)+Number(process.env.REFRESH_EXPIRY_IN),userid:decoded._id}],
+options:{validateBeforeSave:true}})||[];
+
+if(!results) throw new UnAuthorizedException("invalid token");
+
+    }

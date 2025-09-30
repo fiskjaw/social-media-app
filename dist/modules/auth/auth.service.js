@@ -30,7 +30,7 @@ class authenticationservice {
         if (!(0, hash_1.comparehash)(password, user.password))
             throw new error_response_3.badRequestException("Invalid password");
         const logincredential = await (0, token_1.createlogincredentials)(user);
-        return res.status(200).json({ message: "Login successful", refresh_token: logincredential.refreshtoken, accesstoken: logincredential.accesstoken });
+        return res.status(200).json({ message: "Login successful", credentials: logincredential });
     };
     confirmemail = async (req, res) => {
         const { email, otp } = req.body;

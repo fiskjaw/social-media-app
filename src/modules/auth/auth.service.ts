@@ -35,7 +35,7 @@ const otp =generateotp();
       if(!comparehash(password,user.password)) throw new badRequestException("Invalid password");
     
      const logincredential= await createlogincredentials(user)
-      return res.status(200).json({message:"Login successful",refresh_token:logincredential.refreshtoken,accesstoken:logincredential.accesstoken});
+      return res.status(200).json({message:"Login successful",credentials:logincredential});
     }
 confirmemail = async (req: Request, res: Response): Promise<Response> => {
   const { email, otp } = req.body;
