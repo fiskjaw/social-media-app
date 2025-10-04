@@ -17,12 +17,12 @@ const s3config = () => {
     });
 };
 exports.s3config = s3config;
-const uploadfile = async ({ storageApproach = cloud_multer_1.storageEnum.MEMORY, Bucket = process.env.AWS_BUCKET_NAME, ACL = "private", path = "general", file }) => {
+const uploadfile = async ({ storageapproach = cloud_multer_1.storageEnum.MEMORY, Bucket = process.env.AWS_BUCKET_NAME, ACL = "private", path = "general", file }) => {
     const command = new client_s3_1.PutObjectCommand({
         Bucket,
         ACL,
         Key: `${process.env.APPLICATION_NAME}/${path}/${(0, uuid_1.v4)()}-${file.originalname}`,
-        Body: storageApproach === cloud_multer_1.storageEnum.MEMORY ? file.buffer : (0, fs_1.createReadStream)(file.path),
+        Body: storageapproach === cloud_multer_1.storageEnum.MEMORY ? file.buffer : (0, fs_1.createReadStream)(file.path),
         ContentType: file.mimetype
     });
     await (0, exports.s3config)().send(command);
@@ -31,13 +31,13 @@ const uploadfile = async ({ storageApproach = cloud_multer_1.storageEnum.MEMORY,
     return command.input.Key;
 };
 exports.uploadfile = uploadfile;
-const uploadlargefile = async ({ storageApproach = cloud_multer_1.storageEnum.MEMORY, Bucket = process.env.AWS_BUCKET_NAME, ACL = "private", path = "general", file }) => {
+const uploadlargefile = async ({ storageapproach = cloud_multer_1.storageEnum.MEMORY, Bucket = process.env.AWS_BUCKET_NAME, ACL = "private", path = "general", file }) => {
     const upload = new lib_storage_1.Upload({ client: (0, exports.s3config)(),
         params: { Bucket,
             Key: `${process.env.APPLICATION_NAME}/${path}/${(0, uuid_1.v4)()}-${file.originalname}`,
             ContentType: file.mimetype,
             ACL,
-            Body: storageApproach === cloud_multer_1.storageEnum.MEMORY ? file.buffer : (0, fs_1.createReadStream)(file.path)
+            Body: storageapproach === cloud_multer_1.storageEnum.MEMORY ? file.buffer : (0, fs_1.createReadStream)(file.path)
         },
         partSize: 2 * 1024 * 1024
     });
@@ -50,10 +50,10 @@ const uploadlargefile = async ({ storageApproach = cloud_multer_1.storageEnum.ME
     return Key;
 };
 exports.uploadlargefile = uploadlargefile;
-const uploadfiles = async ({ storageApproach = cloud_multer_1.storageEnum.MEMORY, Bucket = process.env.AWS_BUCKET_NAME, ACL = "private", path = "general", files }) => {
+const uploadfiles = async ({ storageapproach = cloud_multer_1.storageEnum.MEMORY, Bucket = process.env.AWS_BUCKET_NAME, ACL = "private", path = "general", files }) => {
     let urls = [];
     for (const file of files) {
-        const key = await (0, exports.uploadfile)({ storageApproach, Bucket, ACL, path, file });
+        const key = await (0, exports.uploadfile)({ storageapproach, Bucket, ACL, path, file });
         urls.push(key);
     }
     return urls;

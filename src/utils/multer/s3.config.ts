@@ -22,15 +22,15 @@ credentials: {
     });
 }
 
-export const uploadfile =async({storageApproach=storageEnum.MEMORY,Bucket=process.env.AWS_BUCKET_NAME as string,ACL="private",path="general",file}:
-    {storageApproach?:storageEnum,Bucket?:string,ACL?:ObjectCannedACL,path?:string,file:Express.Multer.File}):Promise<string>=>{
+export const uploadfile =async({storageapproach=storageEnum.MEMORY,Bucket=process.env.AWS_BUCKET_NAME as string,ACL="private",path="general",file}:
+    {storageapproach?:storageEnum,Bucket?:string,ACL?:ObjectCannedACL,path?:string,file:Express.Multer.File}):Promise<string>=>{
 
         const command =new PutObjectCommand({
            
             Bucket,
             ACL,
             Key:`${process.env.APPLICATION_NAME}/${path}/${uuid()}-${file.originalname}`,
-            Body:storageApproach===storageEnum.MEMORY?file.buffer:createReadStream(file.path),
+            Body:storageapproach===storageEnum.MEMORY?file.buffer:createReadStream(file.path),
             ContentType:file.mimetype
         })
    
@@ -40,15 +40,15 @@ export const uploadfile =async({storageApproach=storageEnum.MEMORY,Bucket=proces
     return command.input.Key;
 }
 
-export const uploadlargefile =async({storageApproach=storageEnum.MEMORY,Bucket=process.env.AWS_BUCKET_NAME as string,ACL="private",path="general",file}:
-    {storageApproach?:storageEnum,Bucket?:string,ACL?:ObjectCannedACL,path?:string,file:Express.Multer.File}):Promise<string>=>{
+export const uploadlargefile =async({storageapproach=storageEnum.MEMORY,Bucket=process.env.AWS_BUCKET_NAME as string,ACL="private",path="general",file}:
+    {storageapproach?:storageEnum,Bucket?:string,ACL?:ObjectCannedACL,path?:string,file:Express.Multer.File}):Promise<string>=>{
 const upload = new Upload({client:s3config(),
     params:
     {Bucket
         ,Key:`${process.env.APPLICATION_NAME}/${path}/${uuid()}-${file.originalname}`,
         ContentType:file.mimetype,
         ACL,
-        Body:storageApproach===storageEnum.MEMORY?file.buffer:createReadStream(file.path)
+        Body:storageapproach===storageEnum.MEMORY?file.buffer:createReadStream(file.path)
 
     },
     partSize:2*1024*1024
@@ -66,11 +66,13 @@ return Key
      
 }
 
-export const uploadfiles=async({storageApproach=storageEnum.MEMORY,Bucket=process.env.AWS_BUCKET_NAME as string,ACL="private",path="general",files}:
-    {storageApproach?:storageEnum,Bucket?:string,ACL?:ObjectCannedACL,path?:string,files:Express.Multer.File[]}):Promise<string[]>=>{
+export const uploadfiles=async({storageapproach=storageEnum.MEMORY,Bucket=process.env.AWS_BUCKET_NAME as string,ACL="private",path="general",files}:
+    {storageapproach?:storageEnum,Bucket?:string,ACL?:ObjectCannedACL,path?:string,files:Express.Multer.File[]}):Promise<string[]>=>{
         let urls:string[]=[];
         for (const file of files) {
-          const key = await uploadfile({storageApproach,Bucket,ACL,path,file});
+           
+            
+          const key = await uploadfile({storageapproach,Bucket,ACL,path,file});
           urls.push(key);
         }
         return urls;

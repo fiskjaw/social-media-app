@@ -66,7 +66,7 @@ class authenticationservice {
         return res.status(200).json({ message: "Profile image updated successfully", key });
     };
     coverimages = async (req, res) => {
-        const urls = await (0, s3_config_2.uploadfiles)({ storageApproach: cloud_multer_1.storageEnum.DISK, files: req.files, path: `users/${req.decoded?._id}/cover` });
+        const urls = await (0, s3_config_2.uploadfiles)({ storageapproach: cloud_multer_1.storageEnum.MEMORY, files: req.files, path: `users/${req.decoded?._id}/cover` });
         return res.status(200).json({ message: "Profile image updated successfully", urls });
     };
 }

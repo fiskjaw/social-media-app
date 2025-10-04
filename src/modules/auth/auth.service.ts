@@ -82,7 +82,8 @@ return res.status(200).json({message:"Profile image updated successfully",key});
 };
 
 coverimages= async (req: Request, res: Response): Promise<Response> => {
-  const urls =await uploadfiles({storageApproach:storageEnum.DISK,files:req.files as Express.Multer.File[],path:`users/${req.decoded?._id}/cover`});
+  
+  const urls =await uploadfiles({storageapproach:storageEnum.MEMORY,files:req.files as Express.Multer.File[],path:`users/${req.decoded?._id}/cover`as string});
 
 
 return res.status(200).json({message:"Profile image updated successfully",urls});
