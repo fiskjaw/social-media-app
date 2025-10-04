@@ -12,7 +12,7 @@ class Userservice {
     _tokenmodel = new token_repositories_1.TokenRepository(token_model_1.Tokenmodel);
     constructor() { }
     getprofile = async (req, res, next) => {
-        return res.status(200).json({ message: "login successful", decoded: req.decoded, user: req.user });
+        return res.status(200).json({ message: "fetched successfully", user: req.user, decoded: req.decoded });
     };
     logout = async (req, res) => {
         const { flag } = req.body;

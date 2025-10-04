@@ -62,8 +62,9 @@ class authenticationservice {
         });
     };
     profileimage = async (req, res) => {
-        const key = await (0, s3_config_1.uploadfile)({ file: req.file, path: `users/${req.decoded?._id}` });
-        return res.status(200).json({ message: "Profile image updated successfully", key });
+        const { ContentType, Originalname } = req.body;
+        const { Url, Key } = await (0, s3_config_1.createpresignedurl)({ ContentType, Originalname, path: `users/${req.decoded?._id}/profile` });
+        return res.status(200).json({ message: "Profile image updated successfully", Url, Key });
     };
     coverimages = async (req, res) => {
         const urls = await (0, s3_config_2.uploadfiles)({ storageapproach: cloud_multer_1.storageEnum.MEMORY, files: req.files, path: `users/${req.decoded?._id}/cover` });

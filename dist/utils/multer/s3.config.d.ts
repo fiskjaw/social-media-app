@@ -22,4 +22,15 @@ export declare const uploadfiles: ({ storageapproach, Bucket, ACL, path, files }
     path?: string;
     files: Express.Multer.File[];
 }) => Promise<string[]>;
+export declare const createpresignedurl: ({ Bucket, Key, path, ContentType, Originalname, Expiresin }: {
+    Bucket?: string;
+    Key?: string;
+    path?: string;
+    ContentType?: string;
+    Originalname?: string;
+    Expiresin?: number;
+}) => Promise<{
+    Url: string;
+    Key: string;
+}>;
 //# sourceMappingURL=s3.config.d.ts.map

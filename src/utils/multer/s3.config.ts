@@ -4,6 +4,7 @@ import {v4 as uuid} from "uuid";
 import { createReadStream } from "fs";
 import { Upload } from "@aws-sdk/lib-storage";
 import { badRequestException } from "../response/error.response";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 
 
@@ -77,3 +78,31 @@ export const uploadfiles=async({storageapproach=storageEnum.MEMORY,Bucket=proces
         }
         return urls;
       };
+
+export const createpresignedurl=async({
+    Bucket=process.env.AWS_BUCKET_NAME as string,
+    Key,
+    path="general",
+    ContentType,
+    Originalname,
+    Expiresin=120
+}:{
+    Bucket?:string,
+    Key?:string,
+    path?:string,
+    ContentType?:string,
+    Originalname?:string,
+    Expiresin?:number
+})=>{
+
+    const command = new PutObjectCommand({
+        Bucket,
+        Key:`${process.env.APPLICATION_NAME}/${path}/${uuid()}-${Originalname}`,
+        ContentType,
+      });
+      const Url = await getSignedUrl(s3config(), command, {  expiresIn:Expiresin });
+if (!Url||!command?.input?.Key) throw new badRequestException("failed to create presigned url");
+
+      return {Url,Key:command.input.Key};
+
+}  

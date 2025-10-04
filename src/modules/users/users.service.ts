@@ -18,7 +18,7 @@ class Userservice{
 
 
     getprofile = async (req:Request,res:Response,next:NextFunction)=>{
-return res.status(200).json({message:"login successful",decoded:req.decoded,user:req.user});}
+return res.status(200).json({message:"fetched successfully",user:req.user,decoded:req.decoded});}
 
  logout = async (req:Request,res:Response)=>{
 const {flag}:ILogoutDTO= req.body;

@@ -7,11 +7,13 @@ import { generateotp } from "../../utils/generateotp";
 import { emailevent } from "../../utils/event/email.event";
 import { conflictException } from "../../utils/response/error.response";
 import { badRequestException } from "../../utils/response/error.response";
-import { uploadfile } from "../../utils/multer/s3.config";
+import { createpresignedurl } from "../../utils/multer/s3.config";
 import { comparehash, generatehash } from "../../utils/security/hash";
 import { createlogincredentials } from "../../utils/security/token";
 import { uploadfiles } from "../../utils/multer/s3.config";
 import { storageEnum } from "../../utils/multer/cloud.multer";
+
+
 
 
 
@@ -75,10 +77,11 @@ confirmemail = async (req: Request, res: Response): Promise<Response> => {
 };
 
 profileimage = async (req: Request, res: Response): Promise<Response> => {
-  const key =await uploadfile({file:req.file as Express.Multer.File,path:`users/${req.decoded?._id}`});
+const {ContentType,Originalname}:{ContentType:string,Originalname:string}=req.body;
 
+const {Url,Key}=await createpresignedurl({ContentType,Originalname,path:`users/${req.decoded?._id}/profile`});
 
-return res.status(200).json({message:"Profile image updated successfully",key});
+return res.status(200).json({message:"Profile image updated successfully",Url,Key});
 };
 
 coverimages= async (req: Request, res: Response): Promise<Response> => {
