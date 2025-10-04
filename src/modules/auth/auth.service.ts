@@ -7,9 +7,14 @@ import { generateotp } from "../../utils/generateotp";
 import { emailevent } from "../../utils/event/email.event";
 import { conflictException } from "../../utils/response/error.response";
 import { badRequestException } from "../../utils/response/error.response";
-
+import { uploadfile } from "../../utils/multer/s3.config";
 import { comparehash, generatehash } from "../../utils/security/hash";
 import { createlogincredentials } from "../../utils/security/token";
+import { uploadfiles } from "../../utils/multer/s3.config";
+import { storageEnum } from "../../utils/multer/cloud.multer";
+
+
+
 
 
 class authenticationservice{
@@ -69,7 +74,21 @@ confirmemail = async (req: Request, res: Response): Promise<Response> => {
   });
 };
 
+profileimage = async (req: Request, res: Response): Promise<Response> => {
+  const key =await uploadfile({file:req.file as Express.Multer.File,path:`users/${req.decoded?._id}`});
 
 
+return res.status(200).json({message:"Profile image updated successfully",key});
+};
+
+coverimages= async (req: Request, res: Response): Promise<Response> => {
+  const urls =await uploadfiles({storageApproach:storageEnum.DISK,files:req.files as Express.Multer.File[],path:`users/${req.decoded?._id}/cover`});
+
+
+return res.status(200).json({message:"Profile image updated successfully",urls});
+};
 }
 export default new authenticationservice();
+
+
+

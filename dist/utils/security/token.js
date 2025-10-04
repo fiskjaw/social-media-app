@@ -90,7 +90,6 @@ const decodedtoken = async ({ authorization, tokentype = TokenEnum.ACCESS, }) =>
         ? signatures.refresh_signature
         : signatures.access_signature;
     const decoded = await (0, exports.verifytoken)({ token, Secret: secret });
-    console.log(decoded);
     if (!decoded._id || !decoded.iat) {
         throw new error_response_1.UnAuthorizedException("Invalid token payload");
     }

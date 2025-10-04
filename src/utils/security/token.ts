@@ -111,7 +111,7 @@ export const decodedtoken = async ({
 
   const decoded = await verifytoken({ token, Secret: secret });
 
-  console.log(decoded);
+ 
   if (!decoded._id || !decoded.iat) {
     throw new UnAuthorizedException("Invalid token payload");
   }

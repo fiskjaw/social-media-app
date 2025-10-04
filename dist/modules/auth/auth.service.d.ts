@@ -5,6 +5,8 @@ declare class authenticationservice {
     signup: (req: Request, res: Response) => Promise<Response>;
     login: (req: Request, res: Response, next: NextFunction) => Promise<Response>;
     confirmemail: (req: Request, res: Response) => Promise<Response>;
+    profileimage: (req: Request, res: Response) => Promise<Response>;
+    coverimages: (req: Request, res: Response) => Promise<Response>;
 }
 declare const _default: authenticationservice;
 export default _default;

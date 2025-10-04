@@ -7,8 +7,11 @@ const generateotp_1 = require("../../utils/generateotp");
 const email_event_1 = require("../../utils/event/email.event");
 const error_response_2 = require("../../utils/response/error.response");
 const error_response_3 = require("../../utils/response/error.response");
+const s3_config_1 = require("../../utils/multer/s3.config");
 const hash_1 = require("../../utils/security/hash");
 const token_1 = require("../../utils/security/token");
+const s3_config_2 = require("../../utils/multer/s3.config");
+const cloud_multer_1 = require("../../utils/multer/cloud.multer");
 class authenticationservice {
     _usermodel = new user_repositories_1.UserRepository(user_model_1.Usermodel);
     constructor() { }
@@ -57,6 +60,14 @@ class authenticationservice {
             message: "Email confirmed successfully",
             user, decoded: user
         });
+    };
+    profileimage = async (req, res) => {
+        const key = await (0, s3_config_1.uploadfile)({ file: req.file, path: `users/${req.decoded?._id}` });
+        return res.status(200).json({ message: "Profile image updated successfully", key });
+    };
+    coverimages = async (req, res) => {
+        const urls = await (0, s3_config_2.uploadfiles)({ storageApproach: cloud_multer_1.storageEnum.DISK, files: req.files, path: `users/${req.decoded?._id}/cover` });
+        return res.status(200).json({ message: "Profile image updated successfully", urls });
     };
 }
 exports.default = new authenticationservice();
