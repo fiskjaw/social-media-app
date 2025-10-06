@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createpresignedurl = exports.uploadfiles = exports.uploadlargefile = exports.uploadfile = exports.s3config = void 0;
+exports.deletefiles = exports.deletefile = exports.createGetpresignedurl = exports.getfile = exports.createpresignedurl = exports.uploadfiles = exports.uploadlargefile = exports.uploadfile = exports.s3config = void 0;
 const client_s3_1 = require("@aws-sdk/client-s3");
 const cloud_multer_1 = require("./cloud.multer");
 const uuid_1 = require("uuid");
@@ -60,7 +60,7 @@ const uploadfiles = async ({ storageapproach = cloud_multer_1.storageEnum.MEMORY
     return urls;
 };
 exports.uploadfiles = uploadfiles;
-const createpresignedurl = async ({ Bucket = process.env.AWS_BUCKET_NAME, Key, path = "general", ContentType, Originalname, Expiresin = 120 }) => {
+const createpresignedurl = async ({ Bucket = process.env.AWS_BUCKET_NAME, path = "general", ContentType, Originalname, Expiresin = 120 }) => {
     const command = new client_s3_1.PutObjectCommand({
         Bucket,
         Key: `${process.env.APPLICATION_NAME}/${path}/${(0, uuid_1.v4)()}-${Originalname}`,
@@ -72,4 +72,36 @@ const createpresignedurl = async ({ Bucket = process.env.AWS_BUCKET_NAME, Key, p
     return { Url, Key: command.input.Key };
 };
 exports.createpresignedurl = createpresignedurl;
+const getfile = async ({ Bucket = process.env.AWS_BUCKET_NAME, Key }) => {
+    const command = new client_s3_1.GetObjectCommand({ Bucket, Key });
+    return await (0, exports.s3config)().send(command);
+};
+exports.getfile = getfile;
+const createGetpresignedurl = async ({ Bucket = process.env.AWS_BUCKET_NAME, Key, downloadname = "dummy", download, Expiresin = 120 }) => {
+    const command = new client_s3_1.GetObjectCommand({
+        Bucket,
+        Key,
+        ResponseContentDisposition: download === "true" ? `attachment; filename=${downloadname}` : undefined
+    });
+    const Url = await (0, s3_request_presigner_1.getSignedUrl)((0, exports.s3config)(), command, { expiresIn: Expiresin });
+    if (!Url || !command?.input?.Key)
+        throw new error_response_1.badRequestException("failed to create presigned url");
+    return Url;
+};
+exports.createGetpresignedurl = createGetpresignedurl;
+const deletefile = async ({ Bucket = process.env.AWS_BUCKET_NAME, Key }) => {
+    const command = new client_s3_1.DeleteObjectCommand({ Bucket, Key });
+    return await (0, exports.s3config)().send(command);
+};
+exports.deletefile = deletefile;
+const deletefiles = async ({ Bucket = process.env.AWS_BUCKET_NAME, urls, Quiet = false }) => {
+    const Objects = urls.map((url) => { return { Key: url }; });
+    const command = new client_s3_1.DeleteObjectsCommand({ Bucket,
+        Delete: {
+            Objects,
+            Quiet
+        } });
+    return await (0, exports.s3config)().send(command);
+};
+exports.deletefiles = deletefiles;
 //# sourceMappingURL=s3.config.js.map
