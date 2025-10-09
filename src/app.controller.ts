@@ -13,9 +13,11 @@ import userRouter from "./modules/users/users.controller";
 import connectDB from "./Db/connection";
 import { promisify } from "node:util";
 import { pipeline } from "node:stream";
-import { Usermodel } from "./Db/models/user.model";
+import  postRouter  from "./modules/post/post.controller";
 
-const createS3writestreampipe=promisify(pipeline);
+
+
+const createS3writestreampipe =promisify(pipeline);
 
 
 const limiter:RateLimitRequestHandler =rateLimit({
@@ -27,7 +29,7 @@ const limiter:RateLimitRequestHandler =rateLimit({
         status:429,
         message:"Too many requests from this IP, please try again "
     }
-})
+  });
 export const bootstrap =async ():Promise<void> =>{
     const app:Express = express();
     const port:number = Number(process.env.port);
@@ -86,6 +88,7 @@ app.get("/test-files",async (req:Request,res:Response)=>{
    
     app.use("/api/auth",authRouter);
     app.use("/api/user",userRouter);
+    app.use("/api/post",postRouter);
 
     app.get("/",(req:Request,res:Response)=>{
        return res.status(200).json({message:"hello social media app"});  
@@ -94,17 +97,31 @@ app.get("/test-files",async (req:Request,res:Response)=>{
        return res.status(200).json({message:"hello ts express"});
     })
 
-
-
-    try {
-        const user =new Usermodel({username: "test test",
-        email: `${Date.now()}@gmail.com`,password:"123456"});
+/*async function user(){
+  try {
+   const usermodel = new UserRepository(Usermodel);
+   const user = await usermodel.insertMany({data:[{username:"mohamed",email:`${Date.now()}@gmail.com`,password:"123456"},
+    {username:"ahmed",email:`${Date.now()}k@gmail.com`,password:"123456"}]});
+    console.log(user);
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+user();*/
+   /* try {
+        const usermodel = new UserRepository(Usermodel);
+       const user = await usermodel.findById({
+        id:"63e5c1d1b5d9c5d9c5d9c5d9" as unknown as Types.ObjectId 
+       });
+        console.log(user);
         
-        await user.save({validateBeforeSave:true});
+      await user.updateOne({lastname:"mohamed"});
     } catch (error) {
         console.log(error);
         
-    }
+    }*/
     app.use(globalhandler);
 
     

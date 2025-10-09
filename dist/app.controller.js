@@ -18,7 +18,7 @@ const users_controller_1 = __importDefault(require("./modules/users/users.contro
 const connection_1 = __importDefault(require("./Db/connection"));
 const node_util_1 = require("node:util");
 const node_stream_1 = require("node:stream");
-const user_model_1 = require("./Db/models/user.model");
+const post_controller_1 = __importDefault(require("./modules/post/post.controller"));
 const createS3writestreampipe = (0, node_util_1.promisify)(node_stream_1.pipeline);
 const limiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,
@@ -76,20 +76,38 @@ const bootstrap = async () => {
     });
     app.use("/api/auth", auth_controller_1.default);
     app.use("/api/user", users_controller_1.default);
+    app.use("/api/post", post_controller_1.default);
     app.get("/", (req, res) => {
         return res.status(200).json({ message: "hello social media app" });
     });
     app.get("/user", (req, res) => {
         return res.status(200).json({ message: "hello ts express" });
     });
-    try {
-        const user = new user_model_1.Usermodel({ username: "test test",
-            email: `${Date.now()}@gmail.com`, password: "123456" });
-        await user.save({ validateBeforeSave: true });
-    }
-    catch (error) {
+    /*async function user(){
+      try {
+       const usermodel = new UserRepository(Usermodel);
+       const user = await usermodel.insertMany({data:[{username:"mohamed",email:`${Date.now()}@gmail.com`,password:"123456"},
+        {username:"ahmed",email:`${Date.now()}k@gmail.com`,password:"123456"}]});
+        console.log(user);
+        
+      } catch (error) {
         console.log(error);
+        
+      }
     }
+    user();*/
+    /* try {
+         const usermodel = new UserRepository(Usermodel);
+        const user = await usermodel.findById({
+         id:"63e5c1d1b5d9c5d9c5d9c5d9" as unknown as Types.ObjectId
+        });
+         console.log(user);
+         
+       await user.updateOne({lastname:"mohamed"});
+     } catch (error) {
+         console.log(error);
+         
+     }*/
     app.use(error_response_1.globalhandler);
     app.listen(port, () => {
         console.log(`Server is running on port ${port}`);

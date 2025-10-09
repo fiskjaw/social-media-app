@@ -24,8 +24,13 @@ export interface IUser {
     address?: string;
     confirmedAt?: Date;
     slug?: string;
+    freezedby?: Types.ObjectId;
+    freezedAt?: Date;
+    restoredby?: Types.ObjectId;
+    restoredAt?: Date;
     gender: GenderEnum;
     role: RoleEnum;
+    friends?: Types.ObjectId[];
 }
 export declare const userschema: Schema<IUser, import("mongoose").Model<IUser, any, any, any, import("mongoose").Document<unknown, any, IUser, any, {}> & IUser & Required<{
     _id: Types.ObjectId;

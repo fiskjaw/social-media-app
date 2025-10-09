@@ -27,6 +27,11 @@ exports.userschema = new mongoose_1.Schema({
     address: { type: String },
     gender: { type: String, enum: Object.values(GenderEnum), default: GenderEnum.MALE },
     role: { type: String, enum: Object.values(RoleEnum), default: RoleEnum.USER },
+    friends: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "USER" }],
+    freezedby: { type: mongoose_1.Schema.Types.ObjectId, ref: "USER" },
+    freezedAt: { type: Date },
+    restoredby: { type: mongoose_1.Schema.Types.ObjectId, ref: "USER" },
+    restoredAt: { type: Date },
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
 exports.userschema.virtual("username")
     .set(function (value) {
@@ -38,21 +43,75 @@ exports.userschema.virtual("username")
     .get(function () {
     return `${this.firstname ?? ""} ${this.lastname ?? ""}`;
 });
-exports.userschema.pre("validate", async function (next) {
+/*userschema.pre("validate",async function(this:HUSER&{wasNew:boolean},next){
+  this.wasNew = this.isNew;
+ console.log("pre validate hook ",this.wasNew);
+ if (this.isModified("password")) this.password = await generatehash(this.password);
+ 
+  next();
+})*/
+/*userschema.pre("findOne",function(next){
+  console.log({this:this,query:this.getQuery()});
+  const query =this.getQuery();
+ this.setQuery({...query,freezeAt:{$exists:true}})
+  next();
+})*/
+// userschema.pre("save",async function(this:HUSER&{wasNew:boolean},next){
+//     if (this.wasNew) this.password = await generatehash(this.password);
+//     next();
+//   })
+/*userschema.pre("updateOne",async function(next){
+  console.log({this:this});
+  const query =this.getquery();
+  const query =this.getUpdate() as UpdateQuery<HUSER>;
+  if (update.freezeAt){
+    const tokenmodel = new TokenRepository(Tokenmodel);
+    await tokenmodel.deleteMany({filter:{userid:query._id}});
+  }
+  
+})*/
+/*userschema.pre(["deleteOne", "findOneAndDelete"],async function (next){
+  const query = this.getQuery();
+
+  const tokenmodel=new TokenRepository(Tokenmodel);
+await tokenmodel.deleteMany({filter:{userid:query._id}});
+
+})*/
+/*userschema.pre("insertMany",async function(next,docs){
+  
+  for (const doc of docs) {
+    
+    doc.password = await generatehash(doc.password);
+  }
+  next();
+})*/
+exports.userschema.pre("save", async function (next) {
     this.wasNew = this.isNew;
-    console.log("pre validate hook ", this.wasNew);
-    if (this.isModified("password"))
+    if (this.isModified("password")) {
         this.password = await (0, hash_1.generatehash)(this.password);
+    }
+    ;
+    if (this.isModified("confirmemailotp")) {
+        this.confirmemailPlainotp = this.confirmemailotp;
+        this.confirmemailotp = await (0, hash_1.generatehash)(this.confirmemailotp);
+    }
+    ;
     next();
 });
 exports.userschema.post("save", async function (doc, next) {
     const that = this;
-    if (that.wasNew)
-        email_event_1.emailevent.emit("confirmemail", { to: that.email, otp: 123456 });
+    if (that.wasNew && that.confirmemailPlainotp)
+        email_event_1.emailevent.emit("confirmemail", { to: that.email, username: that.username, otp: that.confirmemailPlainotp });
 });
-exports.userschema.post("save", function (doc, next) {
-    console.log("pre save hook 2", this);
-    email_event_1.emailevent.emit("confirmemail", { to: this.email, otp: 123456 });
+exports.userschema.pre(["find", "findOne"], async function (next) {
+    const query = this.getQuery();
+    if (query.paranoid === false) {
+        this.setQuery({ ...query });
+    }
+    else {
+        this.setQuery({ ...query, freezedAt: { $exists: false } });
+    }
+    next();
 });
 exports.Usermodel = mongoose_1.models.USER || (0, mongoose_1.model)("USER", exports.userschema);
 //# sourceMappingURL=user.model.js.map

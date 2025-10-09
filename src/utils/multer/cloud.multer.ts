@@ -19,7 +19,7 @@ export const filevalidation ={
     videos:["video/mp4","video/mov","video/quicktime"]
 }
 
-export const cloudfileupload =  ({validation=[],storageapproach=storageEnum.MEMORY,maxsize=2}:{validation?:string[],storageapproach:storageEnum,maxsize?:number}):Multer=>{
+export const cloudfileupload =  ({validation=[],storageapproach=storageEnum.MEMORY,maxsize=2}:{validation?:string[],storageapproach?:storageEnum,maxsize?:number}):Multer=>{
 
 
     const storage = storageapproach===storageEnum.MEMORY?multer.memoryStorage():

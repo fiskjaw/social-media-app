@@ -8,7 +8,7 @@ import { emailevent } from "../../utils/event/email.event";
 import { conflictException } from "../../utils/response/error.response";
 import { badRequestException } from "../../utils/response/error.response";
 import { createpresignedurl } from "../../utils/multer/s3.config";
-import { comparehash, generatehash } from "../../utils/security/hash";
+import { comparehash} from "../../utils/security/hash";
 import { createlogincredentials } from "../../utils/security/token";
 import { uploadfiles } from "../../utils/multer/s3.config";
 import { storageEnum } from "../../utils/multer/cloud.multer";
@@ -29,8 +29,8 @@ signup=async(req:Request,res:Response):Promise<Response>=>{
     
     
     if (checkuser) throw new conflictException("user already exist");
-const otp =generateotp();
-    const user=(await this._usermodel.createuser({data:[{username,email,password:await generatehash(password),confirmemailotp:await generatehash(otp.toString())}],options:{validateBeforeSave:true},}));
+    const otp =generateotp();
+    const user=(await this._usermodel.createuser({data:[{username,email,password,confirmemailotp:`${otp}`}],options:{validateBeforeSave:true},}));
     emailevent.emit("confirmemail",{to:email,username,otp});
    
     return res.status(201).json({message:"User created successfully",user,decoded:user});

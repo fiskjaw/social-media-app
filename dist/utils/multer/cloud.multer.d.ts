@@ -10,7 +10,7 @@ export declare const filevalidation: {
 };
 export declare const cloudfileupload: ({ validation, storageapproach, maxsize }: {
     validation?: string[];
-    storageapproach: storageEnum;
+    storageapproach?: storageEnum;
     maxsize?: number;
 }) => Multer;
 //# sourceMappingURL=cloud.multer.d.ts.map

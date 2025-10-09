@@ -21,7 +21,7 @@ class authenticationservice {
         if (checkuser)
             throw new error_response_2.conflictException("user already exist");
         const otp = (0, generateotp_1.generateotp)();
-        const user = (await this._usermodel.createuser({ data: [{ username, email, password: await (0, hash_1.generatehash)(password), confirmemailotp: await (0, hash_1.generatehash)(otp.toString()) }], options: { validateBeforeSave: true }, }));
+        const user = (await this._usermodel.createuser({ data: [{ username, email, password, confirmemailotp: `${otp}` }], options: { validateBeforeSave: true }, }));
         email_event_1.emailevent.emit("confirmemail", { to: email, username, otp });
         return res.status(201).json({ message: "User created successfully", user, decoded: user });
     };

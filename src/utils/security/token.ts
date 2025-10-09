@@ -118,7 +118,7 @@ export const decodedtoken = async ({
   
   if (await tokenmodel.findOne({filter:{jti:decoded.jti}})) throw new UnAuthorizedException("invalid token");
   const user = await usermodel.findOne({
-    filter: { _id: decoded._id },
+    filter: { _id: decoded._id,paranoid:true },
    
   });
 
