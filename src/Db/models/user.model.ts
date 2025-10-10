@@ -151,12 +151,8 @@ userschema.post("save",async function(doc,next){
   if (that.wasNew && that.confirmemailPlainotp) emailevent.emit("confirmemail",{to:that.email,username:that.username,otp:that.confirmemailPlainotp});
 })
 
-userschema.pre(["find","findOne"],async function(next){
-  const query = this.getQuery();
-  if(query.paranoid===false){this.setQuery({...query})}
-  else{this.setQuery({...query,freezedAt:{$exists:false}})}
-  next(); 
-})
+
+
 
     export const Usermodel =models.USER||model<IUser>("USER",userschema);
     export type HUSER=HydratedDocument<IUser>;

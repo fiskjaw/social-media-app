@@ -102,6 +102,7 @@ export const decodedtoken = async ({
     throw new UnAuthorizedException("Invalid role in authorization header");
   }
 
+
   const signatures = await getsignatures(role as signaturelevelenum);
 
   const secret =
@@ -117,8 +118,9 @@ export const decodedtoken = async ({
   }
   
   if (await tokenmodel.findOne({filter:{jti:decoded.jti}})) throw new UnAuthorizedException("invalid token");
+  const userid=decoded._id||decoded.id;
   const user = await usermodel.findOne({
-    filter: { _id: decoded._id,paranoid:true },
+    filter: { _id:userid},
    
   });
 

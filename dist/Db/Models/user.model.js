@@ -103,15 +103,5 @@ exports.userschema.post("save", async function (doc, next) {
     if (that.wasNew && that.confirmemailPlainotp)
         email_event_1.emailevent.emit("confirmemail", { to: that.email, username: that.username, otp: that.confirmemailPlainotp });
 });
-exports.userschema.pre(["find", "findOne"], async function (next) {
-    const query = this.getQuery();
-    if (query.paranoid === false) {
-        this.setQuery({ ...query });
-    }
-    else {
-        this.setQuery({ ...query, freezedAt: { $exists: false } });
-    }
-    next();
-});
 exports.Usermodel = mongoose_1.models.USER || (0, mongoose_1.model)("USER", exports.userschema);
 //# sourceMappingURL=user.model.js.map

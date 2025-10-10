@@ -52,12 +52,7 @@ assetspostFolderId:String
 },
     {timestamps:true});
 
-postschema.pre(["find","findOne","updateOne"],async function(next){
-  const query = this.getQuery();
-  if(query.paranoid===false){this.setQuery({...query})}
-  else{this.setQuery({...query,freezedAt:{$exists:false}})}
-  next(); 
-})
+
  
     export const Postmodel =models.post||model<IPost>("post",postschema);
-    export type Htoken=HydratedDocument<IPost>;
+    export type HPOST=HydratedDocument<IPost>;

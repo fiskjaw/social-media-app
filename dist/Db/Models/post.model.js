@@ -34,15 +34,5 @@ exports.postschema = new mongoose_1.Schema({
     updatedAt: { type: Date },
     assetspostFolderId: String
 }, { timestamps: true });
-exports.postschema.pre(["find", "findOne", "updateOne"], async function (next) {
-    const query = this.getQuery();
-    if (query.paranoid === false) {
-        this.setQuery({ ...query });
-    }
-    else {
-        this.setQuery({ ...query, freezedAt: { $exists: false } });
-    }
-    next();
-});
 exports.Postmodel = mongoose_1.models.post || (0, mongoose_1.model)("post", exports.postschema);
 //# sourceMappingURL=post.model.js.map

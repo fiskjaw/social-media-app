@@ -6,14 +6,25 @@ import { TokenEnum } from "../../utils/security/token";
 import { cloudfileupload, filevalidation } from "../../utils/multer/cloud.multer";
 import * as validators from "./post.validation"
 import { validation } from "../../middlewares/validation.middleware";
-
+import commentrouter from "../comment/comment.controller";
 
 const router:Router=Router();
 
-router.post("/createpost",authentication(endpoint.createpost,TokenEnum.ACCESS),cloudfileupload({validation:filevalidation.images}).array("attachments",3),validation(validators.createpostschema),postService.createPost);
+router.post("/createpost",authentication(endpoint.createpost,TokenEnum.ACCESS),
+cloudfileupload({validation:filevalidation.images}).array("attachments",3),validation(validators.createpostschema),postService.createPost);
 
-router.post("/:postid/like",authentication(endpoint.createpost,TokenEnum.ACCESS),cloudfileupload({validation:filevalidation.images}).array("attachments",3),validation(validators.createpostschema),postService.createPost);
+router.post("/:postid/like",authentication(endpoint.createpost,TokenEnum.ACCESS),
+cloudfileupload({validation:filevalidation.images}).array("attachments",3),validation(validators.createpostschema),postService.createPost);
 
-router .patch("/:postid/like",authentication(endpoint.like,TokenEnum.ACCESS),postService.LikeUnlikepost)
+router .patch("/:postid/like",authentication(endpoint.like,TokenEnum.ACCESS),
+cloudfileupload({validation:filevalidation.images}).array("attachments",3),validation(validators.likeUnlikeschema),postService.LikeUnlikepost)
+
+
+router .patch("/:postid",authentication(endpoint.like,TokenEnum.ACCESS),
+cloudfileupload({validation:filevalidation.images}).array("attachments",3),validation(validators.Updatepostschema),postService.Updatepost)
+
+router.get("/",authentication(endpoint.getpost,TokenEnum.ACCESS),postService.getposts)
+
+router.use("/:postid/comment",commentrouter)
 
 export default router;

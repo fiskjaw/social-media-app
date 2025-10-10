@@ -14,7 +14,7 @@ export declare abstract class DatabaseRepository<Tdocument> {
     }): Promise<any | HydratedDocument<Tdocument> | null>;
     updateOne({ filter, update, options, }: {
         filter: RootFilterQuery<Tdocument>;
-        update: UpdateQuery<Tdocument>;
+        update?: UpdateQuery<Tdocument>;
         options?: MongooseUpdateQueryOptions<Tdocument> | null;
     }): Promise<UpdateWriteOpResult>;
     findById({ id, select, options, }: {
@@ -45,5 +45,18 @@ export declare abstract class DatabaseRepository<Tdocument> {
         select?: ProjectionType<Tdocument> | null;
         options?: QueryOptions<Tdocument> | null;
     }): Promise<any | HydratedDocument<Tdocument>[] | []>;
+    paginate({ filter, select, options, page, size }: {
+        filter?: RootFilterQuery<Tdocument>;
+        select?: ProjectionType<Tdocument> | undefined;
+        options?: QueryOptions<Tdocument> | undefined;
+        page?: number;
+        size?: number;
+    }): Promise<{
+        docscount: number;
+        pages: number;
+        limit: number;
+        currentpage: number;
+        results: any;
+    }>;
 }
 //# sourceMappingURL=database.repositories.d.ts.map

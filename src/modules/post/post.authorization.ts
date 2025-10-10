@@ -1,3 +1,4 @@
+
 import { RoleEnum } from "../../Db/models/user.model";
 
 
@@ -18,5 +19,6 @@ export const endpoint={
     share:[RoleEnum.USER,RoleEnum.ADMIN],
     deleteshare:[RoleEnum.USER,RoleEnum.ADMIN],
     likepost:[RoleEnum.USER,RoleEnum.ADMIN],
-    unlikepost:[RoleEnum.USER,RoleEnum.ADMIN],                                        
+    unlikepost:[RoleEnum.USER,RoleEnum.ADMIN],  
+    getpost:[RoleEnum.USER,RoleEnum.ADMIN],                                      
 }

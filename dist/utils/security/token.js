@@ -95,8 +95,9 @@ const decodedtoken = async ({ authorization, tokentype = TokenEnum.ACCESS, }) =>
     }
     if (await tokenmodel.findOne({ filter: { jti: decoded.jti } }))
         throw new error_response_1.UnAuthorizedException("invalid token");
+    const userid = decoded._id || decoded.id;
     const user = await usermodel.findOne({
-        filter: { _id: decoded._id, paranoid: true },
+        filter: { _id: userid },
     });
     if (!user)
         throw new error_response_2.NotFoundException("User not found with this token");

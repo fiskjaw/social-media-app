@@ -19,5 +19,6 @@ exports.endpoint = {
     deleteshare: [user_model_1.RoleEnum.USER, user_model_1.RoleEnum.ADMIN],
     likepost: [user_model_1.RoleEnum.USER, user_model_1.RoleEnum.ADMIN],
     unlikepost: [user_model_1.RoleEnum.USER, user_model_1.RoleEnum.ADMIN],
+    getpost: [user_model_1.RoleEnum.USER, user_model_1.RoleEnum.ADMIN],
 };
 //# sourceMappingURL=post.authorization.js.map

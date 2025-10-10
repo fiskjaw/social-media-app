@@ -20,6 +20,12 @@ class DatabaseRepository {
         return await doc.exec();
     }
     async updateOne({ filter, update, options, }) {
+        if (Array.isArray(update)) {
+            update.push({ $set: { _v: { if: { $isNumber: "$_v" },
+                        then: { $add: ["$_v", 1] },
+                        else: 1 } } });
+            return await this.model.updateOne(filter, update, options);
+        }
         return await this.model.updateOne(filter, { ...update, $inc: { _v: 1 } }, options);
     }
     async findById({ id, select, options, }) {
@@ -62,7 +68,24 @@ class DatabaseRepository {
         if (options?.lean) {
             doc.lean(options.lean);
         }
+        if (options?.limit) {
+            doc.limit(options.limit);
+        }
+        if (options?.skip) {
+            doc.skip(options.skip);
+        }
         return await doc.exec();
+    }
+    async paginate({ filter = {}, select = {}, options = {}, page = 1, size = 5 }) {
+        let docscount = undefined;
+        let pages = undefined;
+        page = Math.floor(page < 1 ? 1 : page);
+        options.limit = Math.floor(size < 1 || !size ? 5 : size);
+        options.skip = (page - 1) * size;
+        docscount = await this.model.countDocuments(filter);
+        pages = Math.ceil(docscount / (options.limit));
+        const results = await this.find({ filter, select, options });
+        return { docscount, pages, limit: options.limit, currentpage: page, results };
     }
 }
 exports.DatabaseRepository = DatabaseRepository;

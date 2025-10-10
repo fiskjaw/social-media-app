@@ -27,6 +27,8 @@ declare class postService {
     constructor();
     createPost: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
     LikeUnlikepost: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
+    Updatepost: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
+    getposts: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
 }
 declare const _default: postService;
 export default _default;

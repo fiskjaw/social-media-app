@@ -16,5 +16,6 @@ export declare const endpoint: {
     deleteshare: RoleEnum[];
     likepost: RoleEnum[];
     unlikepost: RoleEnum[];
+    getpost: RoleEnum[];
 };
 //# sourceMappingURL=post.authorization.d.ts.map

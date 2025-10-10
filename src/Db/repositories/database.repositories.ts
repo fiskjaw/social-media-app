@@ -29,9 +29,16 @@ async updateOne({
     options,
 }: {
     filter: RootFilterQuery<Tdocument>;
-    update: UpdateQuery<Tdocument>;
+    update?: UpdateQuery<Tdocument>;
     options?: MongooseUpdateQueryOptions<Tdocument> | null;
 }): Promise<UpdateWriteOpResult> {
+    if (Array.isArray(update)) {
+        update.push({$set:
+          {_v:{if: { $isNumber: "$_v" },
+        then: { $add: ["$_v", 1] },
+        else: 1}} })
+        return await this.model.updateOne(filter, update, options);
+    }
     return await this.model.updateOne(filter, {...update,$inc:{_v:1}}, options);
 }
 async findById({id,select,options,}
@@ -93,9 +100,30 @@ async find({filter,select,options,}:{filter?:RootFilterQuery<Tdocument>;select?:
     if (options?.lean) {
         doc.lean(options.lean);
     }
+       if (options?.limit) {
+        doc.limit(options.limit);
+    }
+       if (options?.skip) {
+        doc.skip(options.skip);
+    }
     return await doc.exec();
 }
+async paginate({filter={},select={},options={},page=1,size=5}:{filter?:RootFilterQuery<Tdocument>;select?:ProjectionType<Tdocument>|undefined;options?:QueryOptions<Tdocument>|undefined;page?:number;size?:number}){
+  let docscount:number|undefined=undefined
+let pages:number|undefined=undefined
 
+
+
+  page=Math.floor(page<1?1:page);
+  options.limit=Math.floor(size<1 || !size ? 5:size);
+  options.skip=(page-1)*size;
+docscount=await this.model.countDocuments(filter)
+  
+pages=Math.ceil(docscount/(options.limit))
+
+  const results= await this.find({filter,select,options});
+  return  {docscount,pages,limit:options.limit,currentpage:page,results};
+}
 
 
 }

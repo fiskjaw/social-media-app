@@ -43,5 +43,5 @@ export declare const Postmodel: import("mongoose").Model<any, {}, {}, {}, any, a
 } & {
     __v: number;
 }, any>;
-export type Htoken = HydratedDocument<IPost>;
+export type HPOST = HydratedDocument<IPost>;
 //# sourceMappingURL=post.model.d.ts.map
