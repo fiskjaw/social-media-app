@@ -14,6 +14,13 @@ import connectDB from "./Db/connection";
 import { promisify } from "node:util";
 import { pipeline } from "node:stream";
 import  postRouter  from "./modules/post/post.controller";
+import http from "http";
+import { Server,Socket } from "socket.io";
+import { map } from "zod";
+import { TokenEnum } from "./utils/security/token";
+import { decodedtoken } from "./utils/security/token";
+import { connected } from "node:process";
+
 
 
 
@@ -123,10 +130,13 @@ user();*/
         
     }*/
     app.use(globalhandler);
-
     
-    app.listen (port,()=>{
-        console.log(`Server is running on port ${port}`);
-        
-    })
+ const httpserver = http.createServer(app);
+httpserver.listen(port, () => {
+ console.log(` Server running on port ${port}`);
+});
+    
+
+
+
 }

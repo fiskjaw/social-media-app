@@ -19,6 +19,10 @@ const connection_1 = __importDefault(require("./Db/connection"));
 const node_util_1 = require("node:util");
 const node_stream_1 = require("node:stream");
 const post_controller_1 = __importDefault(require("./modules/post/post.controller"));
+const http_1 = __importDefault(require("http"));
+const socket_io_1 = require("socket.io");
+const token_1 = require("./utils/security/token");
+const token_2 = require("./utils/security/token");
 const createS3writestreampipe = (0, node_util_1.promisify)(node_stream_1.pipeline);
 const limiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,
@@ -109,8 +113,40 @@ const bootstrap = async () => {
          
      }*/
     app.use(error_response_1.globalhandler);
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
+    const httpserver = http_1.default.createServer(app);
+    const io = new socket_io_1.Server(httpserver, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"],
+        },
+    });
+    const connectionsockets = new Map();
+    io.use(async (socket, next) => {
+        try {
+            const { user, decoded } = await (0, token_2.decodedtoken)({ authorization: socket.handshake.auth.authorization,
+                tokentype: token_1.TokenEnum.ACCESS });
+            connectionsockets.set(user.id.toString(), socket.id);
+            next();
+        }
+        catch (error) {
+            next(error);
+        }
+    });
+    io.on("connection", (socket) => {
+        console.log("user connected", socket.id);
+        //connectionsockets.push(socket.id);
+        //socket.to(connectionsockets[connectionsockets.length=2]as string)
+        // .emit("product",{productId:"63e5c1d1b5d9c5d9c5d9c5d9",productname:"laptop"});
+    });
+    /*io.of("/admin").on("connection", (socket: Socket) => {
+      console.log("admin channel", socket.id);
+    
+      socket.on("disconnect", () => {
+        console.log(`logout from::: ${socket.id} `);
+      });
+    });*/
+    httpserver.listen(port, () => {
+        console.log(` Server running on port ${port}`);
     });
 };
 exports.bootstrap = bootstrap;
