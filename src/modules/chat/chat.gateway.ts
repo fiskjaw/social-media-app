@@ -9,5 +9,6 @@ export class Chatgateway{
 
     register =(socket:IAuthSocket)=>{
        this._chatEvent.sayhi(socket)
+       this._chatEvent.sendmessage(socket)
     }
 }

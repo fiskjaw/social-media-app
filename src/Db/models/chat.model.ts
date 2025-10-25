@@ -3,7 +3,7 @@ import { HydratedDocument } from "mongoose";
 
 export interface IMessage{
     content:string
-    createdat:Date
+    createdat?:Date
     createdby:Types.ObjectId
     updatedAt?:Date
     
@@ -12,7 +12,7 @@ export interface IMessage{
 export interface IChat{
 //ovo
     participants:Types.ObjectId[],
-    messages:[]
+    messages:IMessage[]
 
 
 //ovm-->group

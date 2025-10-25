@@ -13,4 +13,11 @@ export class chatEvent{
         this._chatService
       });
     }
+
+
+    sendmessage =(socket:IAuthSocket)=>{
+      return socket.on("sendmessage",(data:{content:string,sendto:string})=>{
+        this._chatService.sendmessage({...data,socket})
+      })
+    }
 }
